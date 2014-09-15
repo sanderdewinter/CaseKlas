@@ -46,9 +46,9 @@ public class HelloNeo4j {
         try
         {
             myFirstNode = graphDb.createNode();
-            myFirstNode.setProperty( "name", "Duane Nickull, I Braineater" );
+            myFirstNode.setProperty( "name", "Rik van der Werf" );
             mySecondNode = graphDb.createNode();
-            mySecondNode.setProperty( "name", "Randy Rampage, Annihilator" );
+            mySecondNode.setProperty( "name", "Sander de Winter" );
 
             myRelationship = myFirstNode.createRelationshipTo( mySecondNode, RelTypes.KNOWS );
             myRelationship.setProperty( "relationship-type", "knows" );
@@ -58,6 +58,8 @@ public class HelloNeo4j {
                     + " " + ( mySecondNode.getProperty( "name" ).toString() );
             System.out.println(myString);
 
+
+            
             tx.success();
         }
         finally
