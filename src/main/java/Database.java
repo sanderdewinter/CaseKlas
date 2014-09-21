@@ -1,11 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
+import org.w3c.dom.NodeList;
 
 /**
  * Created by rik on 9/16/14.
@@ -14,9 +14,8 @@ public class Database implements Relations {
 
     private static final String DB_PATH = "//home//rik//programs//development";
 
-    public Person Rik;
-    Person Sander;
-
+    ArrayList<Node> nodeList = new ArrayList<>();
+    ArrayList<Person> personList = new ArrayList<>();
 
     GraphDatabaseService graphDb;
 
@@ -28,8 +27,8 @@ public class Database implements Relations {
         db.fillDb();
        // db.loadPersonCSV("//home/rik/programs/development/studenten.csv");
 
-        System.out.println(db.query("MATCH(n) "
-                + "RETURN n "));
+        System.out.println(db.query("MATCH (n)-[r]->(m)"
+                + " RETURN n,r,m;"));
 
         db.registerShutdownHook();
     }
@@ -45,18 +44,48 @@ public class Database implements Relations {
 
     void fillDb()
     {
-        Database db = new Database();
-        createPersonNode(Rik = new Person("Rik", "van der Werf"));
-        createPersonNode(Sander = new Person("Sander", "de Winter"));
-        db.createRelationship(Rik,Sander,RelTypes.IS_FRIENDS_WITH);
+        Person Rik,Sander;
+        createPersonNode( Rik = new Person("Rik", "van der Werf"));
+        createPersonNode( Sander = new Person("Sander", "de Winter"));
+        createRelationship(Rik,Sander,RelTypes.IS_FRIENDS_WITH);
+
     }
 
     void createRelationship(Person firstNode, Person secondNode, RelTypes relType)
     {
-        ExecutionEngine engine = new ExecutionEngine(graphDb);
-        //Node person1 =  engine.execute(" MATCH (firstNode:Person) WHERE firstNode.firstname='" + firstNode.firstname + "' Return firstNode" );
-        //Node person2 =  engine.execute(" MATCH (secondNode:Person) WHERE secondNode.firstname='" + secondNode.firstname + "' Return secondNode" );
-        //person1.createRelationshipTo(person2, relType);
+        int person1Nummer = 0;
+        int person2Nummer = 0;
+
+        for (int i = 0; i < personList.size(); i++)
+        {
+            if (personList.get(i).firstname == firstNode.firstname && personList.get(i).lastname == firstNode.lastname)
+            {
+                person1Nummer = i;
+
+            }
+
+        }
+
+        for (int j = 0; j < personList.size(); j++)
+        {
+
+
+            if (personList.get(j).firstname.equals(secondNode.firstname) )
+            {
+                person2Nummer = j;
+
+            }
+
+        }
+        try (Transaction tx = graphDb.beginTx())
+        {
+
+                nodeList.get(person1Nummer).createRelationshipTo(nodeList.get(person2Nummer), relType);
+
+
+
+            tx.success();
+        }
     }
 
 
@@ -85,7 +114,7 @@ public class Database implements Relations {
 
     public void createPersonNode(Person p)
     {
-
+        personList.add(p);
         try (Transaction tx = graphDb.beginTx()) {
             Node node  = graphDb.createNode();
             System.out.println("creating node...");
@@ -94,18 +123,18 @@ public class Database implements Relations {
                 node.setProperty(p.propertyNames.get(i), p.propertyValues.get(i));
 
             }
+            nodeList.add(node);
 
             tx.success();
         }
     }
 
-    //relationship = firstNode.createRelationshipTo(secondNode, RelTypes.KNOWS);
+
 
 
 
     public void registerShutdownHook() {
-        // graphDb.shutdown();
-        //
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -122,9 +151,6 @@ public class Database implements Relations {
 
 
     public String query(String question) {
-        // blz 18
-
-
 
         ExecutionEngine engine = new ExecutionEngine(graphDb);
         ExecutionResult result = engine.execute(question);
