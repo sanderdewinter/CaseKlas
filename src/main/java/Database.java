@@ -14,17 +14,20 @@ public class Database implements Relations {
 
     private static final String DB_PATH = "//home//rik//programs//development";
 
-
+    public Person Rik;
+    Person Sander;
 
 
     GraphDatabaseService graphDb;
+
 
     public static void main(String[] args) {
         Database db = new Database();
         db.createDb();
         db.removeAllData();
         db.fillDb();
-        //db.loadPersonCSV("file://home/rik/programs/development/studenten.csv");
+       // db.loadPersonCSV("//home/rik/programs/development/studenten.csv");
+
         System.out.println(db.query("MATCH(n) "
                 + "RETURN n "));
 
@@ -42,7 +45,18 @@ public class Database implements Relations {
 
     void fillDb()
     {
-        createPersonNode(new Person("Rik", "van der Werf"));
+        Database db = new Database();
+        createPersonNode(Rik = new Person("Rik", "van der Werf"));
+        createPersonNode(Sander = new Person("Sander", "de Winter"));
+        db.createRelationship(Rik,Sander,RelTypes.IS_FRIENDS_WITH);
+    }
+
+    void createRelationship(Person firstNode, Person secondNode, RelTypes relType)
+    {
+        ExecutionEngine engine = new ExecutionEngine(graphDb);
+        //Node person1 =  engine.execute(" MATCH (firstNode:Person) WHERE firstNode.firstname='" + firstNode.firstname + "' Return firstNode" );
+        //Node person2 =  engine.execute(" MATCH (secondNode:Person) WHERE secondNode.firstname='" + secondNode.firstname + "' Return secondNode" );
+        //person1.createRelationshipTo(person2, relType);
     }
 
 
@@ -73,7 +87,7 @@ public class Database implements Relations {
     {
 
         try (Transaction tx = graphDb.beginTx()) {
-            Node node = graphDb.createNode();
+            Node node  = graphDb.createNode();
             System.out.println("creating node...");
             for(int i = 0; i < p.propertyNames.size(); ++i)
             {
