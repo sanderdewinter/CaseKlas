@@ -9,6 +9,6 @@ public interface Relations {
     {
         IS_FRIENDS_WITH,
         WORKS_WITH,
-        ZIT_IN_KLAS
+        SITS_IN_CLASS
     }
 }

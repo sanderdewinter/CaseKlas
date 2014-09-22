@@ -53,7 +53,7 @@ public class Database implements Relations {
         createPersonNode( Rik = new Person("Rik", "van der Werf"));
         createPersonNode( Sander = new Person("Sander", "de Winter"));
         createPersonRelationship(Rik, Sander, RelTypes.IS_FRIENDS_WITH);
-        createClassRelationship(Rik,INF1B, RelTypes.ZIT_IN_KLAS);
+        createClassRelationship(Rik,INF1B, RelTypes.SITS_IN_CLASS);
 
     }
 
@@ -145,7 +145,8 @@ public class Database implements Relations {
 
 
 
-    public void loadPersonCSV(String csvName) {
+    public void loadPersonCSV(String csvName)
+    {
         // neo4j 10.6 load CCSV
         String query = "LOAD CSV WITH HEADERS FROM '" + csvName + "' AS Line ";
         query += " CREATE (:Person{voornaam: Line.voornaam, achternaam: Line.achternaam})";
@@ -193,7 +194,8 @@ public class Database implements Relations {
 
 
 
-    public void registerShutdownHook() {
+    public void registerShutdownHook()
+    {
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -210,7 +212,8 @@ public class Database implements Relations {
 
 
 
-    public String query(String question) {
+    public String query(String question)
+    {
 
         ExecutionEngine engine = new ExecutionEngine(graphDb);
         ExecutionResult result = engine.execute(question);
