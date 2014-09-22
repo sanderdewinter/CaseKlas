@@ -15,8 +15,9 @@ public class Database implements Relations {
     private static final String DB_PATH = "//home//rik//programs//development";
 
     ArrayList<Node> nodeList = new ArrayList<>();
+    ArrayList<Node> nodeClassList = new ArrayList<>();
     ArrayList<Person> personList = new ArrayList<>();
-
+    ArrayList<Class> classList = new ArrayList<>();
     GraphDatabaseService graphDb;
 
 
@@ -33,7 +34,8 @@ public class Database implements Relations {
         db.registerShutdownHook();
     }
 
-    void createDb() {
+    void createDb()
+    {
         this.graphDb = new GraphDatabaseFactory()
                 .newEmbeddedDatabaseBuilder(DB_PATH)
                 .setConfig(GraphDatabaseSettings.nodestore_mapped_memory_size, "10M")
@@ -44,14 +46,55 @@ public class Database implements Relations {
 
     void fillDb()
     {
+        Class INF1B;
         Person Rik,Sander;
+
+        createClassNode(INF1B = new Class("INF1B"));
         createPersonNode( Rik = new Person("Rik", "van der Werf"));
         createPersonNode( Sander = new Person("Sander", "de Winter"));
-        createRelationship(Rik,Sander,RelTypes.IS_FRIENDS_WITH);
+        createPersonRelationship(Rik, Sander, RelTypes.IS_FRIENDS_WITH);
+        createClassRelationship(Rik,INF1B, RelTypes.ZIT_IN_KLAS);
 
     }
 
-    void createRelationship(Person firstNode, Person secondNode, RelTypes relType)
+    void createClassRelationship(Person firstNode, Class secondNode, RelTypes relType)
+    {
+        int person1Nummer = 0;
+        int class2Nummer = 0;
+
+        for (int i = 0; i < personList.size(); i++)
+        {
+            if (personList.get(i).firstname == firstNode.firstname && personList.get(i).lastname == firstNode.lastname)
+            {
+                person1Nummer = i;
+
+            }
+
+        }
+
+        for (int j = 0; j < classList.size(); j++)
+        {
+
+
+            if (classList.get(j).name.equals(secondNode.name) )
+            {
+                class2Nummer = j;
+
+            }
+
+        }
+        try (Transaction tx = graphDb.beginTx())
+        {
+
+            nodeList.get(person1Nummer).createRelationshipTo(nodeClassList.get(class2Nummer), relType);
+
+
+
+            tx.success();
+        }
+    }
+
+    void createPersonRelationship(Person firstNode, Person secondNode, RelTypes relType)
     {
         int person1Nummer = 0;
         int person2Nummer = 0;
@@ -124,6 +167,23 @@ public class Database implements Relations {
 
             }
             nodeList.add(node);
+
+            tx.success();
+        }
+    }
+
+    public void createClassNode(Class c)
+    {
+        classList.add(c);
+        try (Transaction tx = graphDb.beginTx()) {
+            Node node  = graphDb.createNode();
+            System.out.println("creating node...");
+            for(int i = 0; i < c.propertyNames.size(); ++i)
+            {
+                node.setProperty(c.propertyNames.get(i), c.propertyValues.get(i));
+
+            }
+            nodeClassList.add(node);
 
             tx.success();
         }
