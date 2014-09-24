@@ -151,6 +151,7 @@ public class Database extends JApplet implements Relations {
         createClassRelationship(Sander,INF1B, RelTypes.SITS_IN_CLASS);
         createClassRelationship(Robin,INF1B, RelTypes.SITS_IN_CLASS);
         createClassRelationship(Davey,INF1B, RelTypes.SITS_IN_CLASS);
+        //
     }
 
     void createClassRelationship(Person firstNode, Class secondNode, RelTypes relType)
