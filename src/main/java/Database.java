@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 
+import au.com.bytecode.opencsv.CSVReader;
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import org.jgraph.graph.DefaultEdge;
@@ -47,9 +48,9 @@ public class Database extends JApplet implements Relations {
         db.init();
         db.createDb();
         db.removeAllData();
-        db.fillDb();
-       // db.loadPersonCSV("//home/rik/programs/development/studenten.csv");
 
+        db.loadPersonCSV("/studenten.csv");
+        db.fillDb();
         System.out.println(db.query("MATCH (n)-[r]->(m)"
                 + " RETURN n,r,m;"));
 
@@ -129,28 +130,47 @@ public class Database extends JApplet implements Relations {
 
     void fillDb()
     {
-        Class INF1B;
-        Person Rik,Sander,Robin,Davey;
+        Class INF2B,INF2A;
+        Person Rik,Sander,Robin,Davey,Jeroen,Johan,Thomas,Martin,Bas,Roel,Erik,Wesley,Marcel,Jerry,Peter,Dean,Nigel,Armindo,Wim,Amit,Jorik;
 
-        createClassNode(INF1B = new Class("INF1B"));
+
+        createClassNode(INF2B = new Class("INF1B"));
+        createClassNode(INF2A = new Class("INF1B"));
+
+
+        /*
+        createPersonNode( Jeroen = new Person("Jeroen", "Boer"));
+        createPersonNode( Johan = new Person("Johan", "Boers"));
+        createPersonNode( Thomas = new Person("Thomas", "Bolderheij"));
+        createPersonNode( Martin = new Person("Martin", "Bolderheij"));
+        createPersonNode( Bas= new Person("Bas", "Buijs"));
+        createPersonNode( Roel = new Person("Roel", "Engelsman"));
+        createPersonNode( Erik = new Person("Erik", "Euser"));
+        createPersonNode( Wesley = new Person("Wesley", "Heetebrij"));
+        createPersonNode( Marcel = new Person("Marcel", "Hollink"));
+        createPersonNode( Jerry = new Person("Jerry", "Hu"));
+        createPersonNode( Peter = new Person("Peter", "Kleinjan"));
+        createPersonNode( Dean = new Person("Dean", "Koster"));
+        createPersonNode( Nigel = new Person("Nigel", "Maduro"));
+        createPersonNode( Thomas = new Person("Thomas", "Maurer"));
+        createPersonNode( Amit = new Person("Amit", "Sanchit"));
+        createPersonNode( Jorik = new Person("Jorik", "Schouten"));
         createPersonNode( Rik = new Person("Rik", "van der Werf"));
         createPersonNode( Sander = new Person("Sander", "de Winter"));
         createPersonNode( Robin = new Person("Robin", "Siep"));
-        createPersonNode( Davey = new Person("Davey", "de Witter"));
+        createPersonNode( Davey = new Person("Davey", "de Witter")); */
+
+        for (int i = 0; i < personList.size(); i++)
+        {
+            createClassRelationship(personList.get(i),INF2B, RelTypes.SITS_IN_CLASS);
+        }
 
 
-        createPersonRelationship(Rik, Sander, RelTypes.IS_FRIENDS_WITH, true);
-        createPersonRelationship(Rik, Robin, RelTypes.IS_FRIENDS_WITH, true);
-        createPersonRelationship(Rik, Davey, RelTypes.IS_FRIENDS_WITH, true);
-        createPersonRelationship(Sander, Robin, RelTypes.IS_FRIENDS_WITH, true);
-        createPersonRelationship(Sander, Davey, RelTypes.IS_FRIENDS_WITH, true);
-        createPersonRelationship(Davey, Robin, RelTypes.IS_FRIENDS_WITH, true);
 
 
-        createClassRelationship(Rik,INF1B, RelTypes.SITS_IN_CLASS);
-        createClassRelationship(Sander,INF1B, RelTypes.SITS_IN_CLASS);
-        createClassRelationship(Robin,INF1B, RelTypes.SITS_IN_CLASS);
-        createClassRelationship(Davey,INF1B, RelTypes.SITS_IN_CLASS);
+
+
+
         //
     }
 
@@ -247,11 +267,16 @@ public class Database extends JApplet implements Relations {
 
     public void loadPersonCSV(String csvName)
     {
-        // neo4j 10.6 load CCSV
-        String query = "LOAD CSV WITH HEADERS FROM '" + csvName + "' AS Line ";
+
+
+
+        String query = "LOAD CSV WITH HEADERS FROM 'file:/home/rik/Documents/studenten.csv' AS Line ";
         query += " CREATE (:Person{voornaam: Line.voornaam, achternaam: Line.achternaam})";
+
         ExecutionEngine engine = new ExecutionEngine(graphDb);
-        engine.execute(query);
+        ExecutionResult result2 =  engine.execute(query);
+       String k = result2.dumpToString();
+
     }
 
 
@@ -338,7 +363,7 @@ public class Database extends JApplet implements Relations {
         }
 
 
-        
+
 
         return dump;
 
