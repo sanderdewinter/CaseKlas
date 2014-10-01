@@ -51,14 +51,31 @@ public class Database extends JApplet implements Relations {
 
         db.loadPersonCSV("/studenten.csv");
         db.fillDb();
+
+        /* return all nodes with relations*/
         System.out.println(db.query("MATCH (n)-[r]->(m)"
                 + " RETURN n,r,m;"));
+         /* return all nodes */
+        System.out.println(db.query("MATCH (n)"
+                + " RETURN n"));
+
+        /* return person by firstname */
+        System.out.println(db.query("MATCH (n)"
+                + "Where n.voornaam = 'Rik'"
+                + " RETURN n"));
+
+         /* return person by lastname */
+        System.out.println(db.query("MATCH (n)"
+                + "Where n.achternaam = 'Werf'"
+                + " RETURN n"));
+
+
 
         db.registerShutdownHook();
 
 
         //visualisation
-
+/*
         db.init();
         JFrame frame = new JFrame();
         frame.getContentPane().add(db);
@@ -67,7 +84,7 @@ public class Database extends JApplet implements Relations {
 
         frame.pack();
         frame.setVisible(true);
-
+*/
 
     }
 
@@ -126,20 +143,22 @@ public class Database extends JApplet implements Relations {
                 .setConfig(GraphDatabaseSettings.string_block_size, "60")
                 .setConfig(GraphDatabaseSettings.array_block_size, "300")
                 .newGraphDatabase();
+
     }
 
     void fillDb()
     {
         Class INF2B,INF2A;
-        Person Rik,Sander,Robin,Davey,Jeroen,Johan,Thomas,Martin,Bas,Roel,Erik,Wesley,Marcel,Jerry,Peter,Dean,Nigel,Armindo,Wim,Amit,Jorik;
+        Person Rik,Sander,Robin,Davey,Jeroen,Johan,Thomas,Martin,Bas,Roel,Erik,Wesley,Marcel,Jerry,Peter,Dean,Nigel,Armindo,Wim,Amit,Jorik,Test;
 
-
+        // creating a class
         createClassNode(INF2B = new Class("INF1B"));
-        createClassNode(INF2A = new Class("INF1B"));
 
 
+
+        /* creating a person */
+        createPersonNode( Test = new Person("test", "persoon"));
         /*
-        createPersonNode( Jeroen = new Person("Jeroen", "Boer"));
         createPersonNode( Johan = new Person("Johan", "Boers"));
         createPersonNode( Thomas = new Person("Thomas", "Bolderheij"));
         createPersonNode( Martin = new Person("Martin", "Bolderheij"));
@@ -159,6 +178,8 @@ public class Database extends JApplet implements Relations {
         createPersonNode( Sander = new Person("Sander", "de Winter"));
         createPersonNode( Robin = new Person("Robin", "Siep"));
         createPersonNode( Davey = new Person("Davey", "de Witter")); */
+
+
 
         for (int i = 0; i < personList.size(); i++)
         {
@@ -275,7 +296,7 @@ public class Database extends JApplet implements Relations {
 
         ExecutionEngine engine = new ExecutionEngine(graphDb);
         ExecutionResult result2 =  engine.execute(query);
-       String k = result2.dumpToString();
+        String k = result2.dumpToString();
 
     }
 
