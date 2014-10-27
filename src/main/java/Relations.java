@@ -7,8 +7,8 @@ public interface Relations {
 
      static enum RelTypes implements RelationshipType
     {
-        IS_FRIENDS_WITH,
-        WORKS_WITH,
+
+
         SITS_IN_CLASS
     }
 }

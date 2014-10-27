@@ -19,8 +19,8 @@ public class Person  {
     {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.propertyNames.add("firstname");
-        this.propertyNames.add("Lastname");
+        this.propertyNames.add("voornaam");
+        this.propertyNames.add("achternaam");
         this.propertyValues.add(firstname);
         this.propertyValues.add(lastname);
 

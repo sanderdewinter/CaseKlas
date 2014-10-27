@@ -1,0 +1,10 @@
++-------------------------------------------------------------------------+
+| p                                                                       |
++-------------------------------------------------------------------------+
+| Node[705]{voornaam:"Bas",achternaam:"Buijs",id:5,geslacht:"man"}        |
+| Node[706]{voornaam:"Roel",achternaam:"Engelsman",id:6,geslacht:"man"}   |
+| Node[707]{voornaam:"Erik",achternaam:"Euser",id:7,geslacht:"man"}       |
+| Node[708]{voornaam:"Wesley",achternaam:"Heetebrij",id:8,geslacht:"man"} |
++-------------------------------------------------------------------------+
+4 rows
+Properties set: 4
